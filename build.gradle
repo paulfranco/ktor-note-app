@@ -25,6 +25,14 @@ sourceSets {
 repositories {
     mavenLocal()
     jcenter()
+    maven { url 'https://kotlin.bintray.com/ktor' }
+    maven { url 'https://kotlin.bintray.com/kotlin-js-wrappers' }
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
 
 dependencies {
