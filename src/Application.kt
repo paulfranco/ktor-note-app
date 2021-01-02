@@ -2,6 +2,7 @@ package co.paulfran
 
 import co.paulfran.data.checkPasswordForEmail
 import co.paulfran.routes.loginRoute
+import co.paulfran.routes.noteRoutes
 import co.paulfran.routes.registerRoute
 import io.ktor.application.*
 import io.ktor.auth.*
@@ -20,10 +21,6 @@ fun Application.module(testing: Boolean = false) {
     install(DefaultHeaders)
     install(CallLogging)
     // Essential Features
-    install(Routing) {
-        registerRoute()
-        loginRoute()
-    }
     install(ContentNegotiation) {
         gson {
             setPrettyPrinting()
@@ -31,6 +28,12 @@ fun Application.module(testing: Boolean = false) {
     }
     install(Authentication) {
         configureAuth()
+    }
+
+    install(Routing) {
+        registerRoute()
+        loginRoute()
+        noteRoutes()
     }
 }
 
