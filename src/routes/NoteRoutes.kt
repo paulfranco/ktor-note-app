@@ -1,7 +1,9 @@
 package co.paulfran.routes
 
 import co.paulfran.data.collections.Note
+import co.paulfran.data.deleteNoteForUser
 import co.paulfran.data.getNotesForUser
+import co.paulfran.data.requests.DeleteNoteRequest
 import co.paulfran.data.saveNote
 import io.ktor.application.*
 import io.ktor.auth.*
@@ -24,6 +26,25 @@ fun Route.noteRoutes() {
         }
     }
 
+    route("/deleteNote") {
+        authenticate {
+            post {
+                val email = call.principal<UserIdPrincipal>()!!.name
+                val request = try {
+                    call.receive<DeleteNoteRequest>()
+                } catch (e: ContentTransformationException) {
+                    call.respond(BadRequest)
+                    return@post
+                }
+                if (deleteNoteForUser(email, request.id)) {
+                    call.respond(OK)
+                } else {
+                    call.respond(Conflict)
+                }
+            }
+        }
+    }
+
     route("/addNote") {
         authenticate {
             post {
@@ -38,7 +59,6 @@ fun Route.noteRoutes() {
                 } else {
                     call.respond(Conflict)
                 }
-
             }
         }
     }
