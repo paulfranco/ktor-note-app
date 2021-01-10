@@ -5,6 +5,7 @@ import co.paulfran.data.collections.User
 import co.paulfran.data.registerUser
 import co.paulfran.data.requests.AccountRequest
 import co.paulfran.data.responses.SimpleResponse
+import co.paulfran.security.getHashWithSalt
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
@@ -24,7 +25,7 @@ fun Route.registerRoute() {
             }
             val userExists = checkIfUserExists(request.email)
             if (!userExists) {
-                if (registerUser(User(request.email, request.password))) {
+                if (registerUser(User(request.email, getHashWithSalt(request.password)))) {
                     call.respond(OK, SimpleResponse(true, "Successfully Created Account"))
                 } else {
                     call.respond(OK, SimpleResponse(false, "An Unknown error occurred"))
